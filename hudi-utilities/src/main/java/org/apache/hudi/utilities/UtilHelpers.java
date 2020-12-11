@@ -243,6 +243,7 @@ public class UtilHelpers {
     sparkConf.set("spark.hadoop.mapred.output.compression.type", "BLOCK");
 
     additionalConfigs.forEach(sparkConf::set);
+    //注册自定义类型
     return SparkRDDWriteClient.registerClasses(sparkConf);
   }
 

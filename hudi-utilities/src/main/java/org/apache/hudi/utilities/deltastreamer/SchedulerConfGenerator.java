@@ -74,7 +74,31 @@ public class SchedulerConfGenerator {
    * Helper to set Spark Scheduling Configs dynamically.
    *
    * @param cfg Config for HoodieDeltaStreamer
+   *
+   * 每个池可支持的参数有三个：
+   *
+   * schedulingMode：FIFO 或 FAIR，FIFO是默认的策略。
+   * weight：每个池子分配资源的权重，默认情况下所有的权重为1。
+   * minShare：最小资源，CPU核的数量，默认为0。在进行资源分配时，总是最先满足所有池的minShare，再根据weight分配剩下的资源。
+   *
+   *            配置文件示例：
+   *
+   * <?xml version="1.0"?>
+   * <allocations>
+   *   <pool name="production">
+   *     <schedulingMode>FAIR</schedulingMode>
+   *     <weight>1</weight>
+   *     <minShare>2</minShare>
+   *   </pool>
+   *   <pool name="test">
+   *     <schedulingMode>FIFO</schedulingMode>
+   *     <weight>2</weight>
+   *     <minShare>3</minShare>
+   *   </pool>
+   * </allocations>
+   * 没有出现在配置文件中的池，所有参数取默认值（schedulingMode=FIFO，weight=1，minShare=0）。
    */
+
   public static Map<String, String> getSparkSchedulingConfigs(HoodieDeltaStreamer.Config cfg) throws Exception {
     scala.Option<String> scheduleModeKeyOption = new SparkConf().getOption(SPARK_SCHEDULER_MODE_KEY);
     final Option<String> sparkSchedulerMode =

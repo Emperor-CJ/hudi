@@ -50,8 +50,8 @@
     <module>packaging/hudi-utilities-bundle</module>
     <module>packaging/hudi-timeline-server-bundle</module>
     <module>docker/hoodie/hadoop</module>
-    <module>hudi-integ-test</module>
-    <module>packaging/hudi-integ-test-bundle</module>
+<!--    <module>hudi-integ-test</module>-->
+<!--    <module>packaging/hudi-integ-test-bundle</module>-->
     <module>hudi-examples</module>
     <module>hudi-flink</module>
     <module>packaging/hudi-flink-bundle</module>
@@ -94,7 +94,7 @@
     <log4j.version>1.2.17</log4j.version>
     <slf4j.version>1.7.15</slf4j.version>
     <joda.version>2.9.9</joda.version>
-    <hadoop.version>2.7.3</hadoop.version>
+    <hadoop.version>3.0.0</hadoop.version>
     <hive.groupid>org.apache.hive</hive.groupid>
     <hive.version>2.3.1</hive.version>
     <hive.exec.classifier>core</hive.exec.classifier>

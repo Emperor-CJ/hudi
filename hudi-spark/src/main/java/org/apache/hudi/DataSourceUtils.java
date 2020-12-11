@@ -90,6 +90,8 @@ public class DataSourceUtils {
    * specified in {@code DataSourceWriteOptions}.
    */
   public static KeyGenerator createKeyGenerator(TypedProperties props) throws IOException {
+
+    //如果没有指定就是SimpleKeyGenerator
     String keyGeneratorClass = props.getString(DataSourceWriteOptions.KEYGENERATOR_CLASS_OPT_KEY(),
         DataSourceWriteOptions.DEFAULT_KEYGENERATOR_CLASS_OPT_VAL());
     try {

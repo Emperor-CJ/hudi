@@ -1,0 +1,56 @@
+spark-submit --jars hdfs://nameservice1/data_lake/jars/hive-service-2.1.1.jar,hdfs://nameservice1/data_lake/jars/hive-jdbc-2.1.1.jar  \
+--master yarn  \
+--name _biz_operation_t_city  \
+--driver-memory 2G  \
+--num-executors 2  \
+--executor-memory 2G  \
+--executor-cores 1  \
+--deploy-mode cluster  \
+--conf spark.driver.userClassPathFirst=true  \
+--conf spark.dynamicAllocation.enabled=false  \
+--conf spark.yarn.submit.waitAppCompletion=false  \
+--conf spark.yarn.executor.memoryOverhead=512  \
+--conf spark.yarn.driver.memoryOverhead=512  \
+--class org.apache.hudi.utilities.deltastreamer.HoodieDeltaStreamer hdfs://nameservice1/data_lake/jars/data_lake_1.jar  \
+--schemaprovider-class org.apache.hudi.utilities.schema.FilebasedSchemaProvider  \
+--source-class org.apache.hudi.utilities.sources.ParquetDFSSource  \
+--target-base-path hdfs://nameservice1/data_lake/data/full/biz_operation_t_city/2020113  \
+--op BULK_INSERT  \
+--target-table biz_operation_t_city  \
+--table-type COPY_ON_WRITE  \
+--source-limit 1000  \
+--source-ordering-field update_time  \
+--enable-hive-sync   \
+--transformer-class org.apache.hudi.utilities.transform.AddHivePartitionColumnTransform  \
+--props hdfs://nameservice1/data_lake/config/full/biz_operation_t_city/dfs-source.properties \
+
+Config{
+    targetBasePath='hdfs://nameservice1/data_lake/data/full/_biz_operation_t_city/2020113',
+    targetTableName='_biz_operation_t_city',
+    tableType='COPY_ON_WRITE',
+    baseFileFormat='PARQUET',
+    propsFilePath='hdfs://nameservice1/data_lake/config/full/_biz_operation_t_city/dfs-source.properties',
+    configs=[],
+    sourceClassName='org.apache.hudi.utilities.sources.ParquetDFSSource',
+    sourceOrderingField='update_time',
+    payloadClassName='org.apache.hudi.common.model.OverwriteWithLatestAvroPayload',
+    schemaProviderClassName='org.apache.hudi.utilities.schema.FilebasedSchemaProvider',
+    transformerClassNames=[org.apache.hudi.utilities.transform.AddHivePartitionColumnTransform],
+    sourceLimit=1000,
+    operation=BULK_INSERT,
+    filterDupes=false,
+    enableHiveSync=true,
+    maxPendingCompactions=5,
+    continuousMode=false,
+    minSyncIntervalSeconds=0,
+    sparkMaster='local[2]',
+    commitOnErrors=false,
+    deltaSyncSchedulingWeight=1,
+    compactSchedulingWeight=1,
+    deltaSyncSchedulingMinShare=0,
+    compactSchedulingMinShare=0,
+    forceDisableCompaction=false,
+    checkpoint='null',
+    initialCheckpointProvider='null',
+    help=false
+}

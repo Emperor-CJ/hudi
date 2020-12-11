@@ -101,6 +101,8 @@ public class DFSPathSelector {
       // obtain all eligible files under root folder.
       log.info("Root path => " + props.getString(Config.ROOT_INPUT_PATH_PROP) + " source limit => " + sourceLimit);
       long lastCheckpointTime = lastCheckpointStr.map(Long::parseLong).orElse(Long.MIN_VALUE);
+
+      //将更改时间大于lastCheckpointTime 的文件过滤出来
       List<FileStatus> eligibleFiles = listEligibleFiles(fs, new Path(props.getString(Config.ROOT_INPUT_PATH_PROP)), lastCheckpointTime);
       // sort them by modification time.
       eligibleFiles.sort(Comparator.comparingLong(FileStatus::getModificationTime));

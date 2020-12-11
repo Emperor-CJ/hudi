@@ -43,6 +43,7 @@ public class JsonDFSSource extends JsonSource {
 
   @Override
   protected InputBatch<JavaRDD<String>> fetchNewData(Option<String> lastCkptStr, long sourceLimit) {
+    //第一个：读取数据的文件  第二个： 文件中更改的最大时间
     Pair<Option<String>, String> selPathsWithMaxModificationTime =
         pathSelector.getNextFilePathsAndMaxModificationTime(lastCkptStr, sourceLimit);
     return selPathsWithMaxModificationTime.getLeft()

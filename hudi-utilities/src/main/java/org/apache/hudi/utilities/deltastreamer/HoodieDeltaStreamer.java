@@ -115,6 +115,7 @@ public class HoodieDeltaStreamer implements Serializable {
   public HoodieDeltaStreamer(Config cfg, JavaSparkContext jssc, FileSystem fs, Configuration conf,
                              Option<TypedProperties> props) throws IOException {
     // Resolving the properties first in a consistent way
+    //读取--props 配置文件所有信息
     if (props.isPresent()) {
       this.properties = props.get();
     } else if (cfg.propsFilePath.equals(Config.DEFAULT_DFS_SOURCE_PROPERTIES)) {
@@ -125,12 +126,14 @@ public class HoodieDeltaStreamer implements Serializable {
           new Path(cfg.propsFilePath), cfg.configs).getConfig();
     }
 
+    //TODO
     if (cfg.initialCheckpointProvider != null && cfg.checkpoint == null) {
       InitialCheckPointProvider checkPointProvider =
           UtilHelpers.createInitialCheckpointProvider(cfg.initialCheckpointProvider, this.properties);
       checkPointProvider.init(conf);
       cfg.checkpoint = checkPointProvider.getCheckpoint();
     }
+
     this.cfg = cfg;
     this.bootstrapExecutor = Option.ofNullable(
         cfg.runBootstrap ? new BootstrapExecutor(cfg, jssc, fs, conf, this.properties) : null);
@@ -458,6 +461,8 @@ public class HoodieDeltaStreamer implements Serializable {
 
   public static void main(String[] args) throws Exception {
     final Config cfg = getConfig(args);
+
+    //生成配置文件
     Map<String, String> additionalSparkConfigs = SchedulerConfGenerator.getSparkSchedulingConfigs(cfg);
     JavaSparkContext jssc =
         UtilHelpers.buildSparkContext("delta-streamer-" + cfg.targetTableName, cfg.sparkMaster, additionalSparkConfigs);
@@ -467,7 +472,8 @@ public class HoodieDeltaStreamer implements Serializable {
     }
 
     try {
-      new HoodieDeltaStreamer(cfg, jssc).sync();
+      HoodieDeltaStreamer hoodieDeltaStreamer = new HoodieDeltaStreamer(cfg, jssc);
+      hoodieDeltaStreamer.sync();
     } finally {
       jssc.stop();
     }

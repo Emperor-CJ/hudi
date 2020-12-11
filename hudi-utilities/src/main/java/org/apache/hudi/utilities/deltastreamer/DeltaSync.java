@@ -203,13 +203,18 @@ public class DeltaSync implements Serializable {
 
     refreshTimeline();
     // Register User Provided schema first
+
+    //注册schema的加载器
     registerAvroSchemas(schemaProvider);
 
+    //数据转换器
     this.transformer = UtilHelpers.createTransformer(cfg.transformerClassNames);
     this.keyGenerator = DataSourceUtils.createKeyGenerator(props);
 
+    //TODO
     this.metrics = new HoodieDeltaStreamerMetrics(getHoodieClientConfig(this.schemaProvider));
 
+    //数据源转换器
     this.formatAdapter = new SourceFormatAdapter(
         UtilHelpers.createSource(cfg.sourceClassName, props, jssc, sparkSession, schemaProvider, metrics));
     this.conf = conf;
@@ -334,6 +339,7 @@ public class DeltaSync implements Serializable {
       InputBatch<Dataset<Row>> dataAndCheckpoint =
           formatAdapter.fetchNewDataInRowFormat(resumeCheckpointStr, cfg.sourceLimit);
 
+      //将source源数据进行转换
       Option<Dataset<Row>> transformed =
           dataAndCheckpoint.getBatch().map(data -> transformer.get().apply(jssc, sparkSession, data, props));
       checkpointStr = dataAndCheckpoint.getCheckpointForNextBatch();

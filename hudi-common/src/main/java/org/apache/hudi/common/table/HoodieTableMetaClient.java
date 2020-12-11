@@ -122,6 +122,8 @@ public class HoodieTableMetaClient implements Serializable {
     this.consistencyGuardConfig = consistencyGuardConfig;
     this.hadoopConf = new SerializableConfiguration(conf);
     Path basePathDir = new Path(this.basePath);
+
+    //文件下面会创建一个.hoodie目录
     this.metaPath = new Path(basePath, METAFOLDER_NAME).toString();
     Path metaPathDir = new Path(this.metaPath);
     this.fs = getFs();
